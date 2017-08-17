@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# monitor setup
+xbacklight = 80
+
+# sound setup
+pulseaudio -k
+
+# wait for pulseaudio to start again
+sleep 1
+
+# ... now set audio
+pacmd set-default-sink alsa_output.pci-0000_00_1b.0.analog-stereo
+pactl set-sink-volume $(audioctl sink) 0%
+
+# firefox
+if ! pidof firefox > /dev/null; then
+    i3-msg -q workspace '3: Firefox'
+    i3-msg -q exec firefox
+fi
+
+# thunderbird
+if ! pidof thunderbird > /dev/null; then
+    i3-msg -q workspace '4: Thunderbird'
+    i3-msg -q exec thunderbird
+fi
+
+# return to main workspace
+i3-msg -q workspace '1: Main'
+
+echo 'Done'

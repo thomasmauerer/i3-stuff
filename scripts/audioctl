@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# get the index of the selected sink
+getsink() {
+    # try to get the running sink
+    device=$(pactl list sinks short | grep "RUNNING" | awk '{print $1}')
+
+    if [ "$device" = ""  ]; then
+        # if nothing is running get the default sink
+        device=$(pacmd list-sinks | grep "* index:" | awk '{print $NF}')
+    fi
+
+    echo $device
+}
+
+
+# get the selected sink volume
+getvolume() {
+    pacmd list-sinks | awk '/^\svolume:/{i++} i=='$(getsink)+1'{print $5; exit}'
+}
+
+
+# print a help message
+printhelp() {
+    echo 'Usage: audioctl [CMD]'
+    echo 'CMD:'
+    echo '  sink    - get the index of the current audio sink'
+    echo '  volume  - get the current audio volume'
+}
+
+case "$1" in
+    sink)
+        getsink
+        ;;
+    volume)
+        getvolume
+        ;;
+    *)
+        printhelp
+        ;;
+esac
