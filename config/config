@@ -1,0 +1,270 @@
+# i3 config file (v4)
+#
+# Thomas Mauerer
+#
+# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+
+
+# General stuff
+# .............
+# use the Windows key as the mod key
+set $mod Mod4
+
+# Font for window titles and bar
+font pango:Sans 11
+
+# don't show window title bars -> this saves place and is necessary for transparent terminals (at least in Ubuntu) ;-)
+new_window pixel 2
+# END
+
+
+# a few variables
+# ...............
+set $term gnome-terminal
+set $browser firefox
+set $mail thunderbird
+# END
+
+
+# hotkeys to the basic programs
+# .............................
+bindsym $mod+Return exec $term
+bindsym $mod+w exec $browser
+bindsym $mod+e exec $mail
+bindsym $mod+s exec spotify
+bindsym $mod+Shift+s exec vlc
+# END
+
+
+# Automatically start some programs
+# .................................
+# Start Dropbox
+exec dropbox start
+
+# Start Compton -> for transperancy (i3 does not support this by default)
+# exec_always compton -bf # if you want a fading effect between window switches
+exec_always compton -b 
+
+# Stop Nautilus from opening a window -> I don't know why this happens :-(
+exec --no-startup-id gsettings set org.gnome.desktop.background show-desktop-icons false
+
+# Set a random wallpaper using my own script
+exec_always bg-set
+
+# Network Settings and switcher icon in bar
+exec --no-startup-id nm-applet
+# END
+
+
+# Multimedia keys
+# ...............
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume $(exec audioctl sink) +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume $(exec audioctl sink) -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute $(exec audioctl sink) toggle # mute sound
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioStop exec playerctl stop
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+# END
+
+
+# Workspaces
+# ..........
+set $ws1 "1: Main"
+set $ws2 "2: Secondary"
+set $ws3 "3: Firefox"
+set $ws4 "4: Thunderbird"
+set $ws10 "10: Spotify"
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8 
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+# move workspace to left monitor
+bindsym $mod+Shift+Control+j move workspace to output left
+bindsym $mod+Shift+Control+Left move workspace to output left
+
+# move workspace to right monitor
+bindsym $mod+Shift+Control+odiaeresis move workspace to output right
+bindsym $mod+Shift+Control+Right move workspace to output right
+
+# Assign programs to workspaces
+#assign [class="Spotify"] $workspace10 # does not work for spotify :-(
+for_window [class="Spotify"] move to workspace $ws10
+# END
+
+
+# General layouting
+# .................
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# change to horizontal layout
+bindsym $mod+shift+h layout splith
+
+# change to vertical layout
+bindsym $mod+shift+v layout splitv
+
+# change container layout
+bindsym $mod+F1 layout toggle split
+bindsym $mod+F2 layout stacking
+bindsym $mod+F3 layout tabbed
+# END
+
+
+# It's all about focus :-)
+# ........................
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+odiaeresis focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+odiaeresis move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# focus the parent container
+bindsym $mod+a focus parent
+# END
+
+
+# Special commands
+# ................
+# kill focused window
+bindsym $mod+q kill
+
+# start dmenu-desktop (a program launcher)
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+
+# enter fullscreen mode for the focused container
+bindsym $mod+F11 fullscreen toggle
+
+# lock the screen
+bindsym $mod+shift+x exec lock
+# END
+
+
+# Floating windows
+# ................
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+# END
+
+
+# Window resizing
+# ...............
+mode "resize" {
+        # vim style
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym odiaeresis resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# direct resizing (vim style one line above)
+bindsym $mod+u resize shrink width 10 px or 10 ppt
+bindsym $mod+Shift+u resize shrink width 5 px or 5 ppt
+bindsym $mod+i resize grow height 10 px or 10 ppt
+bindsym $mod+Shift+i resize grow height 5 px or 5 ppt
+bindsym $mod+o resize shrink height 10 px or 10 ppt
+bindsym $mod+Shift+o resize shrink height 5 px or 5 ppt
+bindsym $mod+p resize grow width 10 px or 10 ppt
+bindsym $mod+Shift+p resize grow width 5 px or 5 ppt
+# END
+
+
+# Status and workspaces bar
+# .........................
+set $bg-color 	         #2f343f
+set $inactive-bg-color   #2f343f
+set $text-color          #f3f4f5
+set $inactive-text-color #676E7D
+set $urgent-bg-color     #E53935
+
+bar {
+  status_command i3blocks -c ~/.config/i3/i3blocks.conf
+	colors {
+		background $bg-color
+	  separator #757575
+		#                  border             background         text
+		focused_workspace  $bg-color          $bg-color          $text-color
+		inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
+		urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
+	}
+}
+# END
+
+
+# Reload/Restart/Exit stuff
+# .........................
+# reload the configuration file
+bindsym $mod+Shift+c reload
+
+# restart i3 inplace
+bindsym $mod+Shift+r restart
+
+# exit i3
+bindsym $mod+Escape exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+# END
