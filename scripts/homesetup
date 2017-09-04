@@ -46,4 +46,10 @@ if ! pidof spotify > /dev/null; then
     i3-msg -q exec spotify
 fi
 
+# and now go back to main workspace
+i3-msg -q workspace '1: Main'
+
+# call wallpaper script again due to resolution problems of my monitor
+bg-set
+
 echo 'Done'
