@@ -2,7 +2,7 @@
 
 # name of screens
 leftMonitor=DVI-I-1-1
-rigthMonitor=DVI-I-2-2
+rightMonitor=DVI-I-2-2
 
 # turn on the monitors
 xrandr --auto
@@ -11,7 +11,7 @@ xrandr --auto
 sleep 1 
 
 # ... now set to your needs 
-xrandr --output VIRTUAL1 --off --output eDP1 --mode 1920x1080 --pos 3840x0 --rotate normal --output DP1 --off --output HDMI1 --off --output "$leftMonitor" --mode 1920x1080 --pos 0x0 --rotate normal --output "$rigthMonitor" --mode 1920x1080 --pos 1920x0 --rotate normal
+xrandr --output VIRTUAL1 --off --output eDP1 --mode 1920x1080 --pos 3840x0 --rotate normal --output DP1 --off --output HDMI1 --off --output "$leftMonitor" --mode 1920x1080 --pos 0x0 --rotate normal --output "$rightMonitor" --mode 1920x1080 --pos 1920x0 --rotate normal
 
 echo 'Monitor setup finished'
 
@@ -35,7 +35,7 @@ i3-msg -q workspace '3: Firefox'
 if ! pidof firefox > /dev/null; then
     i3-msg -q exec firefox
 fi
-i3-msg -q move workspace to output $rigthMonitor
+i3-msg -q move workspace to output $rightMonitor
 
 # thunderbird
 i3-msg -q workspace '4: Thunderbird'
