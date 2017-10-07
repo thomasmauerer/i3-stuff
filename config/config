@@ -20,7 +20,7 @@ new_window pixel 2
 
 # a few variables
 # ...............
-set $term gnome-terminal
+set $term urxvt 
 set $browser firefox
 set $mail thunderbird
 # END
@@ -118,6 +118,10 @@ bindsym $mod+Shift+Control+Right move workspace to output right
 # Assign programs to workspaces
 #assign [class="Spotify"] $workspace10 # does not work for spotify :-(
 for_window [class="Spotify"] move to workspace $ws10
+
+# Scratchpad commands
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
 # END
 
 
