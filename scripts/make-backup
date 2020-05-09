@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# check if we are root
+if [ "$EUID" -ne "0" ]; then echo "Please run this script as root"; exit 1; fi
+
+# parse the argument
+PART="$1"
+if [ ! -e "$PART" ]; then echo "Usage: make-backup <partition> (e.g. /dev/sdb1)"; exit 1; fi
+
+# create a mount point
+MOUNT_DIR="/media/backup"
+mkdir -p "$MOUNT_DIR"
+mount "$PART" "$MOUNT_DIR"
+
+# backup home, etc, and var
+cd "$MOUNT_DIR"
+BACKUP_DIR="Backup-$(date +'%Y-%m-%d')"
+mkdir "$BACKUP_DIR"
+echo "Backing up home directory ..."
+rsync -ah --progress "$HOME" "$BACKUP_DIR"
+echo "Backing up etc directory ..."
+rsync -ah --progress /etc "$BACKUP_DIR"
+echo "Backing up var directory ..."
+rsync -ah --progress /var "$BACKUP_DIR"
+
+cd # go outside the directory
+
+# unmount and cleanup
+umount "$MOUNT_DIR"
+rm -r "$MOUNT_DIR"
+
+echo "Backup finished"
+exit 0
